@@ -1,3 +1,7 @@
 /regex/tsSample/node_modules
 /regex/tsSample/dist
 /regex/javaSample/target
+/JavaCommonSample/target
+/JavaCommonSample/.idea
+/jdbc_mysql/.idea
+/jdbc_mysql/target
