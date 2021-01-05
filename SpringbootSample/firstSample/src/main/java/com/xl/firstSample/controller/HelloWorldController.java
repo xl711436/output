@@ -31,6 +31,11 @@ import java.util.Map;
     public String queryMongodb() {
         return service.queryMongodb();
     }
+
+    @RequestMapping("/redisTest")
+    public String redisTest() {
+        return service.redisTest();
+    }
 }
 
 

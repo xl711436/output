@@ -8,4 +8,6 @@ public interface IUserService {
     List<Map<String,Object>> getUserName();
 
     String queryMongodb();
+
+    String redisTest();
 }
