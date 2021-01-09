@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.mybatisdemo.mapper.UserMapper">
+    <select id="getCount" resultType="java.lang.Integer">
+        SELECT count(*)
+        FROM user
+    </select>
+
+    <resultMap id="userMap" type="com.example.mybatisdemo.bean.User">
+        <id property="id" column="id"/>
+        <result property="name" column="name "/>
+        <result property="age" column="age"/>
+        <result property="email" column="email"/>
+
+    </resultMap>
+
+    <select id="getAllByXml" resultMap="userMap">
+        SELECT *
+        FROM user
+    </select>
+
+
+</mapper>
