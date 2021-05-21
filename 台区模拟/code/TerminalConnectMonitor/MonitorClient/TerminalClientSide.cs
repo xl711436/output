@@ -94,16 +94,17 @@ namespace MonitorClient
         }
 
 
-        public void ReConnect()
+        public int ReConnect()
         {
+            int isReConnect = 0;
            
             if (ClientStatus != ClientStatusTypeEnum.Communicated && ClientStatus != ClientStatusTypeEnum.Communicated)
             {
                 ConnectToServer();
                 TraceHelper.TraceInfo("ReConnect " + TerminalInfo.Address + " " + TerminalInfo.Type     + " ClientStatus" + ClientStatus.ToString()  );
-
+                isReConnect = 1;
             }
-        
+            return isReConnect;
         }
 
         private void ConnectCallback(IAsyncResult ar)
@@ -315,10 +316,15 @@ namespace MonitorClient
                         case DownMessageTypeEnum.StatusSearch_Command:
                             {
                                 StatusSearchCommandMessage curMessage = StatusSearchCommandMessage.GetMessageFromBytes(receive);
-                                StatusSearchAnswerMessage reMessage = new StatusSearchAnswerMessage(TerminalInfo);
-                                reMessage.HardwareErrorCode = this.HardwareErrorCode;
-                                reMessage.HardwareStatusCode = this.HardwareStatusCode;
-                                reMessage.AnswerTimestamp = MessageCommon.GetUnixstampByDateTime(DateTime.Now);
+                                StatusSearchAnswerMessage reMessage = StatusSearchAnswerMessage.GetSampleMessage();
+
+
+                                reMessage.TerminalType = TerminalInfo.Type;
+                                reMessage.MessageFormatVersion = 0; 
+                                reMessage.TerminalAddress = TerminalInfo.Address; 
+                                reMessage.MessageLength = 170;
+                                reMessage.MessageType = UpMessageTypeEnum.StatusSearch_Answer;
+
 
                                 reMessage.HeartbeatInterval = this.HeartbeatInterval; 
                                 reMessage.UploadDataInterval = this.UploadDataInterval; 
@@ -357,8 +363,9 @@ namespace MonitorClient
 
         public void DisConnect()
         {
-            ClientSocket.Close();
             ClientStatus = ClientStatusTypeEnum.Disconneted;
+            ClientSocket.Close();
+        
         }
 
     }

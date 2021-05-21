@@ -36,6 +36,8 @@ namespace MonitorClient
             connectManager.ConnectServer();
             connectManager.OutPutLogInfo.Enqueue(DateTime.Now.ToString() + "  仿真启动成功");
 
+            TraceHelper.TraceInfo("  仿真启动成功");
+
 
             //connectManager.OutPutLogInfo.Enqueue(DateTime.Now.ToString() + "  发送心跳报文开始");
             //connectManager.SendHeartBeatMessage();
@@ -108,40 +110,90 @@ namespace MonitorClient
         }
 
         private void Btn_VoltageChangerClose_Click(object sender, EventArgs e)
-        {
-            TerminalClientSide curClient = connectManager.ClientList.FirstOrDefault(p => p.TerminalInfo.Type == MonitorLib.Enum.TerminalTypeEnum.VoltageChanger && (p.ClientStatus == ClientStatusTypeEnum.Connected || p.ClientStatus == ClientStatusTypeEnum.Communicated));
-            if (curClient != null)
+        { 
+            int closeCount = (int)Nup_VoltageChangerNumber.Value;
+            if (closeCount == 0)
             {
-                connectManager.StopClient(curClient);
+                MessageBox.Show("掉线数量不能为0");
             }
-    
+            else
+            {
+                for (int i = 0; i < closeCount; i++)
+                {
+                    TerminalClientSide curClient = connectManager.ClientList.FirstOrDefault(p => p.TerminalInfo.Type == MonitorLib.Enum.TerminalTypeEnum.VoltageChanger && (p.ClientStatus == ClientStatusTypeEnum.Connected || p.ClientStatus == ClientStatusTypeEnum.Communicated));
+                    if (curClient != null)
+                    {
+                        connectManager.StopClient(curClient);
+                    }
+                }
+            } 
         }
 
         private void Btn_HeadMeterClose_Click(object sender, EventArgs e)
         {
-            TerminalClientSide curClient = connectManager.ClientList.FirstOrDefault(p => p.TerminalInfo.Type == MonitorLib.Enum.TerminalTypeEnum.HeadMeter && ( p.ClientStatus ==  ClientStatusTypeEnum.Connected || p.ClientStatus == ClientStatusTypeEnum.Communicated));
-            if (curClient != null)
+
+
+            int closeCount = (int)Nup_HeadMeterNumber.Value;
+            if (closeCount == 0)
             {
-                connectManager.StopClient(curClient);
+                MessageBox.Show("掉线数量不能为0");
             }
+            else
+            {
+                for (int i = 0; i < closeCount; i++)
+                {
+                    TerminalClientSide curClient = connectManager.ClientList.FirstOrDefault(p => p.TerminalInfo.Type == MonitorLib.Enum.TerminalTypeEnum.HeadMeter && (p.ClientStatus == ClientStatusTypeEnum.Connected || p.ClientStatus == ClientStatusTypeEnum.Communicated));
+                    if (curClient != null)
+                    {
+                        connectManager.StopClient(curClient);
+                    }
+                }
+            }
+
         }
 
         private void Btn_BranchMeterClose_Click(object sender, EventArgs e)
         {
-            TerminalClientSide curClient = connectManager.ClientList.FirstOrDefault(p => p.TerminalInfo.Type == MonitorLib.Enum.TerminalTypeEnum.BranchMeter && (p.ClientStatus == ClientStatusTypeEnum.Connected || p.ClientStatus == ClientStatusTypeEnum.Communicated));
-            if (curClient != null)
+
+
+            int closeCount = (int)Nup_BranchMeterNumber.Value;
+            if (closeCount == 0)
             {
-                connectManager.StopClient(curClient);
+                MessageBox.Show("掉线数量不能为0");
             }
+            else
+            {
+                for (int i = 0; i < closeCount; i++)
+                {
+                    TerminalClientSide curClient = connectManager.ClientList.FirstOrDefault(p => p.TerminalInfo.Type == MonitorLib.Enum.TerminalTypeEnum.BranchMeter && (p.ClientStatus == ClientStatusTypeEnum.Connected || p.ClientStatus == ClientStatusTypeEnum.Communicated));
+                    if (curClient != null)
+                    {
+                        connectManager.StopClient(curClient);
+                    }
+                }
+            }
+
+
         }
 
         private void Btn_BoxMeterClose_Click(object sender, EventArgs e)
         {
-            TerminalClientSide curClient = connectManager.ClientList.FirstOrDefault(p => p.TerminalInfo.Type == MonitorLib.Enum.TerminalTypeEnum.BoxMeter && (p.ClientStatus == ClientStatusTypeEnum.Connected || p.ClientStatus == ClientStatusTypeEnum.Communicated));
-            if (curClient != null)
+            int closeCount = (int)Nup_BoxMeterNumber.Value;
+            if (closeCount == 0)
             {
-                connectManager.StopClient(curClient);
+                MessageBox.Show("掉线数量不能为0");
             }
+            else
+            {
+                for (int i = 0; i < closeCount; i++)
+                {
+                    TerminalClientSide curClient = connectManager.ClientList.FirstOrDefault(p => p.TerminalInfo.Type == MonitorLib.Enum.TerminalTypeEnum.BoxMeter && (p.ClientStatus == ClientStatusTypeEnum.Connected || p.ClientStatus == ClientStatusTypeEnum.Communicated));
+                    if (curClient != null)
+                    {
+                        connectManager.StopClient(curClient);
+                    }
+                } 
+            } 
         }
 
         private void Timer_Show_Tick(object sender, EventArgs e)
@@ -160,6 +212,8 @@ namespace MonitorClient
         {
             connectManager.StopAll();
             connectManager.OutPutLogInfo.Enqueue(DateTime.Now.ToString() + "  仿真停止");
+
+            TraceHelper.TraceInfo( "  仿真停止");
         }
 
         private void Btn_TimeSearch_Click(object sender, EventArgs e)
@@ -173,20 +227,25 @@ namespace MonitorClient
                 }
             }
 
+            TraceHelper.TraceInfo( "  发送较时包,终端数： " + connectManager.ClientList.Count());
+
         }
 
         private void Btn_ReConnect_Click(object sender, EventArgs e)
         {
+            int reConnectCount = 0;
             foreach (TerminalClientSide curClient in connectManager.ClientList)
             {
-                
-                    curClient.ReConnect();
-                 
+                reConnectCount = reConnectCount + curClient.ReConnect();
+
             }
+            TraceHelper.TraceInfo( "  重连数量： " + reConnectCount);
+
         }
 
         private void Form_Main_Load(object sender, EventArgs e)
         {
+      
             Nud_HeadLose.Value = ConfigHelper.headWarn;
             Nud_BranchLose.Value = ConfigHelper.branchWarn;
             Nud_BoxLose.Value = ConfigHelper.boxWarn;
@@ -212,9 +271,26 @@ namespace MonitorClient
 
             // 强制重新载入配置文件的连接配置节
             ConfigurationManager.RefreshSection("appSettings");
-
-
+             
             connectManager.RefreshPowerAndLineLoseRate();
+            TraceHelper.TraceInfo("重新生成线损信息 ");
+
+        }
+
+        private void Cb_AutoReConnect_CheckedChanged(object sender, EventArgs e)
+        {
+            Time_AutoReConnect.Enabled = Cb_AutoReConnect.Checked;
+        }
+
+        private void Time_AutoReConnect_Tick(object sender, EventArgs e)
+        {
+            int reConnectCount = 0;
+            foreach (TerminalClientSide curClient in connectManager.ClientList)
+            {
+                reConnectCount = reConnectCount + curClient.ReConnect();
+
+            }
+            TraceHelper.TraceInfo("  自动重连数量： " + reConnectCount);
         }
     }
 }

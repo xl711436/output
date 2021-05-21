@@ -32,17 +32,21 @@ namespace MonitorLib.Message
             byte[] missRate = MessageCommon.GetBytesByUint16(MissRate);
             byte[] temp = MessageCommon.GetBytesByUint16(Temp);
 
-            for (int i = 0; i < 4; i++)
-            {
-                result[i] = address[i+3];
-            }
+            //for (int i = 0; i < 4; i++)
+            //{
+            //    result[i] = address[i+3];
+            //}
 
-            for (int i = 0; i < 3; i++)
-            {
-                result[i+4] = address[i];
-            }
+            //for (int i = 0; i < 3; i++)
+            //{
+            //    result[i+4] = address[i];
+            //}
 
-            result[7] = (byte)ElectricMeterType;
+            for (int i = 0; i < 8; i++)
+            {
+                result[i] = address[i];
+            }
+            //result[7] = (byte)ElectricMeterType;
 
             for (int i = 0; i < 4; i++)
             {
@@ -66,19 +70,8 @@ namespace MonitorLib.Message
         {
             ElectricMeter result = new ElectricMeter();
 
-            byte[] addressBytes = new byte[8];
-
-            for (int i = 0; i < 4; i++)
-            {
-                I_Source[i+ I_StartIndex] = addressBytes[i + 3];
-            }
-
-            for (int i = 0; i < 3; i++)
-            {
-                I_Source[i + 4 + I_StartIndex] = addressBytes[i];
-            }
-
-            result.Address = MessageCommon.GetUint64ByBytes(addressBytes); 
+         
+            result.Address = MessageCommon.GetUint64ByBytes(MessageCommon.ByteCopy(I_Source, I_StartIndex, 8)); 
             result.ElectricMeterType = (ElectricMeterTypeEnum)I_Source[7 + I_StartIndex];
 
             result.Power = MessageCommon.GetUint32ByBytes(I_Source, 8 + I_StartIndex);
@@ -96,7 +89,7 @@ namespace MonitorLib.Message
             ElectricMeter result = new ElectricMeter();
 
             result.ElectricMeterType = ElectricMeterTypeEnum.OnePhase;
-            result.Address = 123456;
+            result.Address = 123456789012;
             result.Power = MessageCommon.GetPowerValue(1234);
             result.MissRate = MessageCommon.GetMissRateValue(0.02);
             result.Temp = MessageCommon.GetTempValue(34);

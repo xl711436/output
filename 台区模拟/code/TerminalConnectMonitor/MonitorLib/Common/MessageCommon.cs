@@ -83,10 +83,10 @@ namespace MonitorLib.Message
         public static UInt16 GetUint16ByBytes(byte[] I_Value, int I_StartIndex = 0)
         {
             UInt16 result = BitConverter.ToUInt16(I_Value, I_StartIndex);
-
+           
             return result;
         }
-
+ 
 
 
         public static uint GetUnixstampByDateTime(DateTime I_DateTime)
@@ -107,7 +107,7 @@ namespace MonitorLib.Message
         public static DateTime GetDateTimeByUnixstamp(uint I_Unixstamp)
         {
             string timeStamp = I_Unixstamp.ToString();
-            DateTime dtStart = TimeZone.CurrentTimeZone.ToLocalTime(new DateTime(1970, 1, 1));
+            DateTime dtStart = new DateTime(1970, 1, 1);
             long lTime = long.Parse(timeStamp + "0000000");
             TimeSpan toNow = new TimeSpan(lTime);
             DateTime dtResult = dtStart.Add(toNow);
@@ -293,7 +293,7 @@ namespace MonitorLib.Message
             {
                 for (int i = 0; i < 4; i++)
                 {
-                    result[i] = (byte)Convert.ToInt32(tempArray[i]);
+                    result[3-i] = (byte)Convert.ToInt32(tempArray[i]);
                 }
             }
 
@@ -305,7 +305,7 @@ namespace MonitorLib.Message
         {
             string result = "";
 
-            result = I_Bytes[0 + I_StartIndex].ToString() + "." + I_Bytes[1 + I_StartIndex].ToString() + "." + I_Bytes[2 + I_StartIndex].ToString() + "." + I_Bytes[3 + I_StartIndex].ToString();
+            result = I_Bytes[3 + I_StartIndex].ToString() + "." + I_Bytes[2 + I_StartIndex].ToString() + "." + I_Bytes[1 + I_StartIndex].ToString() + "." + I_Bytes[0 + I_StartIndex].ToString();
 
             return result;
         }

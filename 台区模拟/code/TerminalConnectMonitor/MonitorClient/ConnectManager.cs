@@ -98,11 +98,14 @@ namespace MonitorClient
         }
 
         /// <summary>
-        /// 根据配送刷新线损信息
+        /// 根据配置刷新线损信息
         /// </summary>
         public void RefreshPowerAndLineLoseRate()
         {
+            //终端id 和功率 的dic
             Dictionary<uint, uint> powerDic = new Dictionary<uint, uint>();
+
+            //终端id 和 线损的dic 
             Dictionary<uint, UInt16> lossRateDic = new Dictionary<uint, ushort>();
 
             GetPowerDic(ConfigHelper.headWarn, ConfigHelper.branchWarn, ConfigHelper.boxWarn, ConfigHelper.thresholdValue, powerDic, lossRateDic);
@@ -399,7 +402,6 @@ namespace MonitorClient
         /// <param name="I_Threshold"></param>
         /// <returns></returns>
         public List<TerminalClientSide> GetSimulationClientMax(int I_ChargeID, int I_HeadCount,int I_BranchCount, int I_BoxCount,int I_Threshold)
-     
         {
             List<TerminalClientSide> result = new List<TerminalClientSide>();
 
@@ -493,6 +495,7 @@ namespace MonitorClient
         public int SendUploadMessage()
         {
             int result = 0;
+            Random curRandom = new Random();
             foreach (TerminalClientSide curClient in ClientList)
             {
                 if (curClient.IsUploadDataBeat())
@@ -505,6 +508,10 @@ namespace MonitorClient
                             {
                                 VoltageChangerUploadDataMessage tempMessage = VoltageChangerUploadDataMessage.GetSampleMessage();
                                 tempMessage.TerminalAddress = curClient.TerminalInfo.Address;
+                                tempMessage.SamplingTime = MessageCommon.GetUnixstampByDateTime(DateTime.Now);
+                                tempMessage.SkinTemp = MessageCommon.GetTempValue(curRandom.Next(1, 30));
+                                tempMessage.EnvTemp = MessageCommon.GetTempValue(curRandom.Next(1,30));
+                                tempMessage.EnvHumidity = MessageCommon.GetHumidityValue(curRandom.Next(31, 80));
 
                                 sendBytes = tempMessage.GetAllBytes();
 
@@ -515,6 +522,9 @@ namespace MonitorClient
                                 HeadMeterUploadDataMessage tempMessage = HeadMeterUploadDataMessage.GetSampleMessage();
                                 tempMessage.TerminalAddress = curClient.TerminalInfo.Address;
                                 tempMessage.AveragePower = MessageCommon.GetPowerValue(curClient.AveragePower);
+                                tempMessage.EnvTemp = MessageCommon.GetTempValue(curRandom.Next(1, 30));
+                                tempMessage.EnvHumidity = MessageCommon.GetHumidityValue(curRandom.Next(31, 80));
+                                tempMessage.SamplingTime = MessageCommon.GetUnixstampByDateTime(DateTime.Now);
                                 sendBytes = tempMessage.GetAllBytes();
                                 break;
                             }
@@ -523,6 +533,9 @@ namespace MonitorClient
                                 BranchMeterUploadDataMessage tempMessage = BranchMeterUploadDataMessage.GetSampleMessage();
                                 tempMessage.TerminalAddress = curClient.TerminalInfo.Address;
                                 tempMessage.AveragePower = MessageCommon.GetPowerValue(curClient.AveragePower);
+                                tempMessage.EnvTemp = MessageCommon.GetTempValue(curRandom.Next(1, 30));
+                                tempMessage.EnvHumidity = MessageCommon.GetHumidityValue(curRandom.Next(31, 80));
+                                tempMessage.SamplingTime = MessageCommon.GetUnixstampByDateTime(DateTime.Now);
                                 sendBytes = tempMessage.GetAllBytes();
                                 break;
                             }
@@ -537,6 +550,10 @@ namespace MonitorClient
                                 tempMessage.Meter3.Address = tempMessage.TerminalAddress + 4;
                                 tempMessage.Meter4.Address = tempMessage.TerminalAddress + 5;
                                 tempMessage.Meter5.Address = tempMessage.TerminalAddress + 6;
+                                tempMessage.EnvTemp = MessageCommon.GetTempValue(curRandom.Next(1, 30));
+                                tempMessage.EnvHumidity = MessageCommon.GetHumidityValue(curRandom.Next(31, 80));
+                                tempMessage.SamplingTime = MessageCommon.GetUnixstampByDateTime(DateTime.Now);
+                                tempMessage.LineLossRate = MessageCommon.GetLineLossRateValue( (double)((double)curClient.LineLossRate/100));
                                 sendBytes = tempMessage.GetAllBytes();
                                 break;
                             }

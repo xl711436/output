@@ -97,6 +97,8 @@
             this.Nud_LoseThreshold = new System.Windows.Forms.NumericUpDown();
             this.label8 = new System.Windows.Forms.Label();
             this.button1 = new System.Windows.Forms.Button();
+            this.Cb_AutoReConnect = new System.Windows.Forms.CheckBox();
+            this.Time_AutoReConnect = new System.Windows.Forms.Timer(this.components);
             ((System.ComponentModel.ISupportInitialize)(this.Nup_VoltageChangerNumber)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.Nup_HeadMeterNumber)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.Nup_BranchMeterNumber)).BeginInit();
@@ -368,11 +370,6 @@
             this.Nup_VoltageChangerNumber.Name = "Nup_VoltageChangerNumber";
             this.Nup_VoltageChangerNumber.Size = new System.Drawing.Size(93, 25);
             this.Nup_VoltageChangerNumber.TabIndex = 27;
-            this.Nup_VoltageChangerNumber.Value = new decimal(new int[] {
-            1,
-            0,
-            0,
-            0});
             // 
             // label1
             // 
@@ -423,11 +420,6 @@
             this.Nup_HeadMeterNumber.Name = "Nup_HeadMeterNumber";
             this.Nup_HeadMeterNumber.Size = new System.Drawing.Size(93, 25);
             this.Nup_HeadMeterNumber.TabIndex = 31;
-            this.Nup_HeadMeterNumber.Value = new decimal(new int[] {
-            1,
-            0,
-            0,
-            0});
             // 
             // Lb_HeadMeterClose
             // 
@@ -468,11 +460,6 @@
             this.Nup_BranchMeterNumber.Name = "Nup_BranchMeterNumber";
             this.Nup_BranchMeterNumber.Size = new System.Drawing.Size(93, 25);
             this.Nup_BranchMeterNumber.TabIndex = 35;
-            this.Nup_BranchMeterNumber.Value = new decimal(new int[] {
-            1,
-            0,
-            0,
-            0});
             // 
             // Lb_BranchMeterClose
             // 
@@ -513,11 +500,6 @@
             this.Nup_BoxMeterNumber.Name = "Nup_BoxMeterNumber";
             this.Nup_BoxMeterNumber.Size = new System.Drawing.Size(93, 25);
             this.Nup_BoxMeterNumber.TabIndex = 39;
-            this.Nup_BoxMeterNumber.Value = new decimal(new int[] {
-            1,
-            0,
-            0,
-            0});
             // 
             // Lb_BoxMeterClose
             // 
@@ -776,11 +758,28 @@
             this.button1.UseVisualStyleBackColor = true;
             this.button1.Click += new System.EventHandler(this.button1_Click);
             // 
+            // Cb_AutoReConnect
+            // 
+            this.Cb_AutoReConnect.AutoSize = true;
+            this.Cb_AutoReConnect.Location = new System.Drawing.Point(1101, 232);
+            this.Cb_AutoReConnect.Name = "Cb_AutoReConnect";
+            this.Cb_AutoReConnect.Size = new System.Drawing.Size(89, 19);
+            this.Cb_AutoReConnect.TabIndex = 65;
+            this.Cb_AutoReConnect.Text = "自动重连";
+            this.Cb_AutoReConnect.UseVisualStyleBackColor = true;
+            this.Cb_AutoReConnect.CheckedChanged += new System.EventHandler(this.Cb_AutoReConnect_CheckedChanged);
+            // 
+            // Time_AutoReConnect
+            // 
+            this.Time_AutoReConnect.Interval = 5000;
+            this.Time_AutoReConnect.Tick += new System.EventHandler(this.Time_AutoReConnect_Tick);
+            // 
             // Form_Main
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1238, 744);
+            this.Controls.Add(this.Cb_AutoReConnect);
             this.Controls.Add(this.button1);
             this.Controls.Add(this.Nud_LoseThreshold);
             this.Controls.Add(this.label8);
@@ -931,5 +930,7 @@
         private System.Windows.Forms.NumericUpDown Nud_LoseThreshold;
         private System.Windows.Forms.Label label8;
         private System.Windows.Forms.Button button1;
+        private System.Windows.Forms.CheckBox Cb_AutoReConnect;
+        private System.Windows.Forms.Timer Time_AutoReConnect;
     }
 }

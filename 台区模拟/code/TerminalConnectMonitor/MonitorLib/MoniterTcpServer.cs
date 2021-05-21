@@ -88,7 +88,15 @@ namespace MonitorLib
             StateObject state = (StateObject)ar.AsyncState;
             Socket handler = state.workSocket;
 
-            int bytesRead = handler.EndReceive(ar);
+            int bytesRead = 0;
+            try { 
+                bytesRead = handler.EndReceive(ar);
+            }
+            catch(Exception Exc)
+            {
+                TraceHelper.TraceInfo("ReadCallBack exception " + Exc.Message);
+            }
+         
 
             if (bytesRead > 0)
             {
